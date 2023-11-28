@@ -1,0 +1,134 @@
+# Author: Nicole Ruiz-Bueno
+# Date:   02/16/2023
+# File:   gui.kv
+#
+# Description:  Generate a list of Fahrenheit to Celsius temperature conversions using a while loop. The user will enter
+#               the starting Fahrenheit temperature and the number of conversions. For each conversion increment the
+#               temperature 2 degrees. Display the Fahrenheit and Celsius temperatures as follows:
+#               0 Fahrenheit is -17.8 degrees Celsius
+#
+# Input:        Starting Fahrenheit and Number of Conversions
+# Output:       RecyclerView with labels displaying Fahrenheit and equivalent Celsius degrees.
+#
+# Processing:   Use a while loop to display text in a RecyclerView
+#               Convert Fahrenheit and Celsius to float
+#               Add loop control variable ( x=1 )
+#               Start while loop that calls on function FtoC with fahrenheit as its argument (self.FtoC(fahrenheit))
+#                   while x <= conversions
+#                   Increment fahrenheit ( fahrenheit = fahrenheit + 2 ) and the loop control variable (x = x + 1)
+#                   Else function to print 'While loop finished'
+#                   Except ValueError to display error message
+#               Set up FtoC Function ( def FtoC(self, fahrenheit): )
+#                   Conduct calculation: celsius = (((fahrenheit -32) * 5.0) / 9.0)
+#                   Have results appear in RecylerView
+#                       ( self.root.ids.output_list.data.append({'tex#t’: f'{kph} kph is {mph:.1f} mph'}) )
+#               Exit button releases event function to close application
+
+
+# Density-independent Pixels - An abstract unit based on the physical density of the screen.
+# With a density of 1, 1dp is equal to 1px. When running on a higher density screen, the number of
+# pixels used to draw 1dp is scaled up a factor appropriate to the screen’s dpi, and the inverse
+# for a lower dpi.
+# Scale-independent Pixels - This is like the dp unit,
+# but it is also scaled by the user’s font size preference. See examples below:
+# font_size: '16dp'
+# font_size: sp(16)
+# font_size: dp(16)
+# height: dp(50)
+
+# create a custom label for the recyclerView
+<MyLabel@Label>:
+    canvas.before:
+        Color:
+            rgba: 1, .5, 0, 1   # orange
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<MyLayout>:
+    GridLayout:
+        cols: 2
+        size: root.width, root.height
+        padding: dp(10)
+        spacing: dp(10)
+
+        Label:
+            text: 'Starting Fahrenheit'
+            font_size: dp(16)
+            size_hint_x: 1      # in percentage, 1 is 100%
+            size_hint_y: None   # no hint from GridLayout
+            height: dp(50)
+
+        TextInput:
+            id: start
+            text: '0'
+            font_size: dp(16)
+            size_hint_x: 1
+            size_hint_y: None
+            height: dp(50)
+
+        Label:
+            text: 'Number of conversions'
+            font_size: dp(16)
+            size_hint_x: 1      # in percentage, 1 is 100%
+            size_hint_y: None   # no hint from GridLayout
+            height: dp(50)
+
+        TextInput:
+            id: conversions
+            text: '90'
+            font_size: dp(16)
+            size_hint_x: 1
+            size_hint_y: None
+            height: dp(50)
+
+        Label:
+            text: 'Output List'
+
+        RecycleView:
+            id: output_list
+            viewclass: 'MyLabel'  # defines the viewtype for the data items.
+
+            # canvas.before means execute before, or under other graphics
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1   # white
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            RecycleBoxLayout:
+                spacing: dp(10)                 # spacing between Labels
+                padding: dp(10), dp(10)         # left right padding of Labels
+                default_size: None, dp(20)  # height of the Label
+
+                # defines the size of the widget in reference to width and height
+                default_size_hint: 1, None # width of Label in RecycleBoxLayout
+                size_hint_y: None       # must be None
+                height: self.minimum_height # min height to display contents
+                orientation: 'vertical' # defines the orientation of data items
+
+                canvas.before:
+                    Color:
+                        rgba: 1, 0, 0, 1   # red
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+        Button:
+            text: 'Generate Conversions'
+            font_size: dp(16)
+            size_hint_x: 1
+            size_hint_y: None
+            height: dp(50)
+            # use root instead of app if button event function is in MyLayout
+            on_release: app.generate_button()
+
+        Button:
+            text: 'Exit'
+            font_size: dp(16)
+            size_hint_x: 1
+            size_hint_y: None
+            height: dp(50)
+            # use root instead of app if button event function is in MyLayout
+            on_release: app.exit_button()
